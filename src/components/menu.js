@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
+import GameList from './CriarGames';
 function HomeScreen() {
     return (
 <View style={styles.container}>
@@ -11,11 +12,9 @@ function HomeScreen() {
     );
 }
 
-function ListScreen() {
+function CriaGames() {
     return (
-<View style={styles.container}>
-<Text></Text>
-</View>
+    <GameList/>
     );
 }
 function PostScreen() {
@@ -51,17 +50,17 @@ export default function Menu() {
                             case 'Home':
                                 iconName = 'home';
                                 break;
-                            case 'Listar':
-                                iconName = 'list-alt'; 
+                            case 'Criar Lista':
+                                iconName = 'game-controller'; 
                                 break;
-                            case 'Tarefas':
-                                iconName = 'file-text';
+                            case 'Ver Lista':
+                                iconName = 'file-tray-full';
                                 break;
-                            case 'Produtos':
-                                iconName = 'flask';
+                            case 'Amigos':
+                                iconName = 'people-circle-sharp';
                                 break;
-                            case 'Ler API':
-                                iconName = 'android';
+                            case 'Usuario':
+                                iconName = 'person-circle-sharp';
                                 break;
                             default:
                                 iconName = 'bomb';
@@ -69,24 +68,23 @@ export default function Menu() {
                         }
                         return <Icon name={iconName} size={size} color={color} />;
                     },
+                    tabBarActiveTintColor: '#0d9a9f',
+                tabBarInactiveTintColor: '#b0b9b9',
+                showLabel: true,
                 })}
-                tabBarOptions={{
-                    activeTintColor: '#006400',
-                    inactiveTintColor: '#006400',
-                    showLabel: true,
-                }}
+                
 >
 <Tab.Screen name="Home" component={HomeScreen} />
-<Tab.Screen name="Listar" component={ListScreen} />
+<Tab.Screen name="Criar Lista" component={CriaGames} />
 <Tab.Screen
-                    name="Tarefas"
+                    name="Ver Lista"
                     component={PostScreen2}
                 />
 <Tab.Screen
-                    name="Produtos"
+                    name="Amigos"
                     component={PostScreen}
                 />
-<Tab.Screen name="Ler API" component={APIScreen} />
+<Tab.Screen name="Usuario" component={APIScreen} />
 </Tab.Navigator>
 </NavigationContainer>
     );

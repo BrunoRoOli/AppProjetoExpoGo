@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
+    "@react-native-community/datetimepicker": "^8.3.0",
     "@react-navigation/bottom-tabs": "^7.3.1",
     "@react-navigation/native": "^7.0.17",
     "expo": "~52.0.38",
@@ -20,6 +21,7 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.7",
     "react-native-paper": "^5.13.1",
+    "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
     "splash-screen": "^4.0.1"
   },

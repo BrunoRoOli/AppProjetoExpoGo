@@ -5,8 +5,8 @@ import Menu from './src/components/menu';
 
 export default function App() {
   const [user, setUser] = useState('');
-  if (!user) {
-   return <Login changeStatus={(user) => setUser(user)} />
-  }
+  //if (!user) {
+  // return <Login changeStatus={(user) => setUser(user)} />
+  //}
   return <Menu/>
 }
