@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import GameList from './CriarGames';
+import RegistrarProgresso from './RegistrarProgresso';
 function HomeScreen() {
     return (
 <View style={styles.container}>
@@ -17,14 +18,12 @@ function CriaGames() {
     <GameList/>
     );
 }
-function PostScreen() {
+function RegProgresso() {
     return (
-<View style={styles.container}>
-<Text></Text>
-</View>
+<RegistrarProgresso/>
     );
 }
-function PostScreen2() {
+function PostScreen() {
     return (
 <View style={styles.container}>
 <Text></Text>
@@ -53,7 +52,7 @@ export default function Menu() {
                             case 'Criar Lista':
                                 iconName = 'game-controller'; 
                                 break;
-                            case 'Ver Lista':
+                            case 'Progresso Game':
                                 iconName = 'file-tray-full';
                                 break;
                             case 'Amigos':
@@ -77,8 +76,8 @@ export default function Menu() {
 <Tab.Screen name="Home" component={HomeScreen} />
 <Tab.Screen name="Criar Lista" component={CriaGames} />
 <Tab.Screen
-                    name="Ver Lista"
-                    component={PostScreen2}
+                    name="Progresso Game"
+                    component={RegProgresso}
                 />
 <Tab.Screen
                     name="Amigos"
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 6,
-        shadowColor: '#006400',
+        shadowColor: '#0d9a9f',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 5,

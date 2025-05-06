@@ -1,27 +1,126 @@
-import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
-import { 
-  TextInput, 
-  List, 
-  RadioButton, 
-  Text, 
-  Button, 
+import React, { useState, useEffect, useRef } from 'react';
+import { Keyboard, ScrollView, StyleSheet, View, ActivityIndicator, FlatList} from 'react-native';
+import {
+  Button,
+  HelperText,
   IconButton,
+  List,
   Provider as PaperProvider,
-  Surface,
-  TouchableRipple,
-  HelperText
+  RadioButton,
+  Text,
+  TextInput
 } from 'react-native-paper';
+import firebase from '../components/services/connectionFirebase';
+import ListarGames from './listarGames';
 
 const CriarJogo = () => {
   // Estados para armazenar os valores dos inputs
   const [nomeJogo, setNomeJogo] = useState('');
   const [plataforma, setPlataforma] = useState('');
   const [genero, setGenero] = useState('');
-  const [statusJogo, setStatusJogo] = useState('');
-  const [nota, setNota] = useState(null);
-  const [dataInicio, setDataInicio] = useState('');
-  const [dataFim, setDataFim] = useState('');
+  const [statusJogo, setStatusJogo] = useState('Jogando'); // Valor padrão corrigido
+  const [nota, setNota] = useState('');
+  const [key, setKey] = useState('');
+  //array dos dados a serem listados
+  const [ListaA, setListaA] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const inputRef = useRef(null);
+  
+
+  useEffect(() => {
+ 
+    async function dados() {
+ 
+      await firebase.database().ref('ListaGames').on('value', (snapshot) => {
+        setListaA([]);
+ 
+        snapshot.forEach((chilItem) => {
+          let data = {
+            key: chilItem.key,
+            nomeJogo: chilItem.val().nome,
+            plataforma: chilItem.val().plataforma,
+            genero: chilItem.val().genero,
+            statusJogo: chilItem.val().statusgame,
+            nota: chilItem.val().nota
+          };
+          setListaA(oldArray => [...oldArray, data].reverse());
+        })
+        setLoading(false);
+      })
+    }
+    dados();
+  }, []);
+
+  
+
+  async function handleInsert() {
+    // Validar formulário antes de prosseguir
+    if (!validateForm()) {
+      alert('Por favor, preencha todos os campos obrigatórios corretamente.');
+      return;
+    }
+    
+    //editar dados (verificando se a chave não está vazia)
+    if (key !== '') {
+      firebase.database().ref('ListaGames').child(key).update({
+        nome: nomeJogo,
+        plataforma: plataforma,
+        genero: genero,
+        statusgame: statusJogo,
+        nota: nota,
+      })
+      Keyboard.dismiss();
+      alert('ListaGames Editada!');
+      clearFields();
+      setKey('');
+      return;
+    }
+    
+    //cadastrar dados (novo registro)
+    let gamesRef = firebase.database().ref('ListaGames');
+    let chave = gamesRef.push().key;
+ 
+    gamesRef.child(chave).set({
+        nome: nomeJogo,
+        plataforma: plataforma,
+        genero: genero,
+        statusgame: statusJogo,
+        nota: nota,
+    });
+    
+    Keyboard.dismiss();
+    alert('ListaGames Cadastrada!');
+    clearFields();
+  }
+ 
+  function clearFields() {
+    setNomeJogo('');
+    setPlataforma('');
+    setGenero('');
+    setStatusJogo('Jogando'); // Reset para o valor padrão
+    setNota('');
+    setDataInicio('');
+    setDataFim(''); // Corrigido: estava setNota('') repetido
+  }
+
+  function handleEdit(data){
+    setKey(data.key),
+    setNomeJogo(data.nome),
+    setPlataforma(data.plataforma),
+    setGenero(data.genero),
+    setStatusJogo(data.statusgame),
+    setNota(data.nota)
+  }
+
+  function handleDelete(key) {
+    firebase.database().ref('ListaGames').child(key).remove()
+      .then(() => {
+        const findGames = ListaA.filter(item => item.key !== key)
+        setListaA(findGames)
+      })
+    alert('Game Excluído!');
+  }
+
 
   // Estados para controlar os erros de validação
   const [errors, setErrors] = useState({
@@ -29,8 +128,6 @@ const CriarJogo = () => {
     plataforma: false,
     genero: false,
     statusJogo: false,
-    dataInicio: false,
-    dataFim: false
   });
 
   // Estado para controlar a expansão do acordeão
@@ -74,8 +171,6 @@ const CriarJogo = () => {
       plataforma: !plataforma.trim(),
       genero: !genero.trim(),
       statusJogo: !statusJogo,
-      dataInicio: dataInicio !== '' && !isValidDateFormat(dataInicio),
-      dataFim: dataFim !== '' && !isValidDateFormat(dataFim)
     };
     
     setErrors(newErrors);
@@ -84,46 +179,8 @@ const CriarJogo = () => {
     return !Object.values(newErrors).some(error => error);
   };
   
-  // Função para salvar o formulário
-  const handleSave = () => {
-    // Validar o formulário
-    if (!validateForm()) {
-      console.log('Formulário contém erros. Por favor, corrija-os.');
-      return;
-    }
-    
-    const gameData = {
-      nomeJogo,
-      plataforma,
-      genero,
-      statusJogo,
-      nota,
-      dataInicio: dataInicio || null,
-      dataFim: dataFim || null,
-    };
-    
-    console.log('Dados do jogo:', gameData);
-    // Aqui você poderia enviar esses dados para uma API ou salvar localmente
-    
-    // Resetar formulário após o envio
-    setNomeJogo('');
-    setPlataforma('');
-    setGenero('');
-    setStatusJogo('');
-    setNota(null);
-    setDataInicio('');
-    setDataFim('');
-    
-    // Resetar erros
-    setErrors({
-      nomeJogo: false,
-      plataforma: false,
-      genero: false,
-      statusJogo: false,
-      dataInicio: false,
-      dataFim: false
-    });
-  };
+  // Não precisamos mais desta função, já que handleInsert fará tudo
+  // const handleSave = () => { ... }
   
   return (
     <PaperProvider>
@@ -141,6 +198,7 @@ const CriarJogo = () => {
           style={styles.input}
           left={<TextInput.Icon icon="gamepad-variant" />}
           error={errors.nomeJogo}
+          ref={inputRef}
         />
         {errors.nomeJogo && (
           <HelperText type="error" visible={errors.nomeJogo}>
@@ -160,6 +218,7 @@ const CriarJogo = () => {
           left={<TextInput.Icon icon="tag-multiple" />}
           placeholder="Ex: Ação, RPG, Aventura..."
           error={errors.genero}
+          ref={inputRef}
         />
         {errors.genero && (
           <HelperText type="error" visible={errors.genero}>
@@ -178,6 +237,7 @@ const CriarJogo = () => {
           style={styles.input}
           left={<TextInput.Icon icon="devices" />}
           error={errors.plataforma}
+          ref={inputRef}
         />
         {errors.plataforma && (
           <HelperText type="error" visible={errors.plataforma}>
@@ -191,6 +251,7 @@ const CriarJogo = () => {
           left={props => <List.Icon {...props} icon="format-list-checks" />}
           expanded={expanded}
           onPress={() => setExpanded(!expanded)}
+          ref={inputRef}
           style={[styles.accordion, errors.statusJogo ? styles.errorBorder : null]}
         >
           <RadioButton.Group onValueChange={value => {
@@ -219,63 +280,43 @@ const CriarJogo = () => {
               color={nota >= star ? "#FFD700" : "#757575"}
               size={30}
               onPress={() => setNota(star)}
+              ref={inputRef}
             />
           ))}
         </View>
         
         {/* Data de Início - Com formatação automática */}
-        <TextInput
-          label="Data de Início"
-          value={dataInicio}
-          onChangeText={(text) => {
-            handleDataChange(text, setDataInicio);
-            if (errors.dataInicio) setErrors({...errors, dataInicio: false});
-          }}
-          style={styles.input}
-          placeholder="DD/MM/AAAA"
-          keyboardType="numeric"
-          maxLength={10}
-          left={<TextInput.Icon icon="calendar" />}
-          error={errors.dataInicio}
-        />
-        {errors.dataInicio && (
-          <HelperText type="error" visible={errors.dataInicio}>
-            Formato de data inválido. Use DD/MM/AAAA
-          </HelperText>
-        )}
-        
-        {/* Data de Fim - Com formatação automática */}
-        <TextInput
-          label="Data de Fim"
-          value={dataFim}
-          onChangeText={(text) => {
-            handleDataChange(text, setDataFim);
-            if (errors.dataFim) setErrors({...errors, dataFim: false});
-          }}
-          style={styles.input}
-          placeholder="DD/MM/AAAA"
-          keyboardType="numeric"
-          maxLength={10}
-          left={<TextInput.Icon icon="calendar" />}
-          error={errors.dataFim}
-        />
-        {errors.dataFim && (
-          <HelperText type="error" visible={errors.dataFim}>
-            Formato de data inválido. Use DD/MM/AAAA
-          </HelperText>
-        )}
         
         {/* Botão Salvar */}
         <Button 
           mode="contained" 
-          onPress={handleSave}
+          onPress={handleInsert}
           style={styles.button}
           icon="content-save"
         >
           Salvar Jogo
-        </Button>
+        </Button>    
       </ScrollView>
+      <View>
+      {loading ?
+        (
+<ActivityIndicator color="#141414" size={45} />
+        ) :
+        (
+<FlatList
+            keyExtractor={item => item.key}
+            data={ListaA}
+            renderItem={({ item }) => (
+<ListarGames data={item} deleteItem={handleDelete}
+                editItem={handleEdit} />
+            )}
+          />
+        )
+      }
+      </View>
     </PaperProvider>
+    
+
   );
 };
 
