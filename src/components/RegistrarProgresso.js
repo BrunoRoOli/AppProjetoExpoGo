@@ -380,9 +380,7 @@ const RegistrarProgresso = () => {
         >
           Salvar Progresso
         </Button>
-      </ScrollView>
-      
-      {/* Lista de Progressos */}
+        {/* Lista de Progressos */}
       <View>
         {loading ? (
           <ActivityIndicator color="#141414" size={45} />
@@ -400,6 +398,7 @@ const RegistrarProgresso = () => {
           />
         )}
       </View>
+      </ScrollView>
     </PaperProvider>
   );
 };

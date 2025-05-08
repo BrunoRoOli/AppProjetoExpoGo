@@ -295,9 +295,8 @@ const CriarJogo = () => {
           icon="content-save"
         >
           Salvar Jogo
-        </Button>    
-      </ScrollView>
-      <View>
+        </Button>  
+        <View>
       {loading ?
         (
 <ActivityIndicator color="#141414" size={45} />
@@ -313,7 +312,9 @@ const CriarJogo = () => {
           />
         )
       }
-      </View>
+      </View>  
+      </ScrollView>
+      
     </PaperProvider>
     
 
