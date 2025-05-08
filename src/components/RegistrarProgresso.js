@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, ScrollView, StyleSheet, View, ActivityIndicator, FlatList } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, View, ActivityIndicator, FlatList, Alert} from 'react-native';
 import {
   Button,
   HelperText,
@@ -189,6 +189,33 @@ const RegistrarProgresso = () => {
         setListaProgressos(novosProgressos);
       });
     alert('Registro excluído!');
+  }
+
+  function excluirRegistro(key) {
+    // Mostra um alerta de confirmação
+    Alert.alert(
+      "Confirmar exclusão",
+      "Tem certeza que deseja excluir este registro?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        { 
+          text: "Excluir", 
+          onPress: () => {
+            // Código original de exclusão
+            firebase.database().ref('Progressos').child(key).remove()
+              .then(() => {
+                const novosProgressos = listaProgressos.filter(item => item.key !== key);
+                setListaProgressos(novosProgressos);
+              });
+            alert('Registro excluído!');
+          },
+          style: "destructive"
+        }
+      ]
+    );
   }
 
   // Selecionar um jogo da lista
