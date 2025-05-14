@@ -198,6 +198,7 @@ const CriarJogo = () => {
           style={styles.input}
           left={<TextInput.Icon icon="gamepad-variant" />}
           error={errors.nomeJogo}
+          theme={{ colors: { primary: '#0d9a9f' } }}
           ref={inputRef}
         />
         {errors.nomeJogo && (
@@ -218,6 +219,7 @@ const CriarJogo = () => {
           left={<TextInput.Icon icon="tag-multiple" />}
           placeholder="Ex: Ação, RPG, Aventura..."
           error={errors.genero}
+          theme={{ colors: { primary: '#0d9a9f' } }}
           ref={inputRef}
         />
         {errors.genero && (
@@ -237,10 +239,11 @@ const CriarJogo = () => {
           style={styles.input}
           left={<TextInput.Icon icon="devices" />}
           error={errors.plataforma}
+          theme={{ colors: { primary: '#0d9a9f' } }}
           ref={inputRef}
         />
         {errors.plataforma && (
-          <HelperText type="error" visible={errors.plataforma}>
+          <HelperText type="error" visible={errors.plataforma} theme={{ colors: { primary: '#0d9a9f' } }}>
             Plataforma é obrigatória
           </HelperText>
         )}
@@ -252,6 +255,7 @@ const CriarJogo = () => {
           expanded={expanded}
           onPress={() => setExpanded(!expanded)}
           ref={inputRef}
+          theme={{ colors: { primary: '#0d9a9f' } }}
           style={[styles.accordion, errors.statusJogo ? styles.errorBorder : null]}
         >
           <RadioButton.Group onValueChange={value => {
@@ -259,9 +263,9 @@ const CriarJogo = () => {
             if (errors.statusJogo) setErrors({...errors, statusJogo: false});
             setExpanded(false);
           }} value={statusJogo}>
-            <RadioButton.Item label="Jogando" value="Jogando" />
-            <RadioButton.Item label="Finalizado" value="Finalizado" />
-            <RadioButton.Item label="Dropado" value="Dropado" />
+            <RadioButton.Item label="Jogando" value="Jogando" theme={{ colors: { primary: '#0d9a9f' } }}/>
+            <RadioButton.Item label="Finalizado" value="Finalizado" theme={{ colors: { primary: '#0d9a9f' } }}/>
+            <RadioButton.Item label="Dropado" value="Dropado" theme={{ colors: { primary: '#0d9a9f' } }}/>
           </RadioButton.Group>
         </List.Accordion>
         {errors.statusJogo && (
@@ -293,11 +297,11 @@ const CriarJogo = () => {
           onPress={handleInsert}
           style={styles.button}
           icon="content-save"
+          textColor="#ffffff"
         >
           Salvar Jogo
-        </Button>    
-      </ScrollView>
-      <View>
+        </Button>  
+        <View>
       {loading ?
         (
 <ActivityIndicator color="#141414" size={45} />
@@ -313,7 +317,9 @@ const CriarJogo = () => {
           />
         )
       }
-      </View>
+      </View>  
+      </ScrollView>
+      
     </PaperProvider>
     
 

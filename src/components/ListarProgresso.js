@@ -1,9 +1,28 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Card, Text, Chip, Divider } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function ListarProgresso({ data, deleteItem, editItem }) {
+  // Função para confirmar exclusão
+  const confirmarExclusao = (key) => {
+    Alert.alert(
+      "Confirmar exclusão",
+      "Tem certeza que deseja excluir este registro?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        { 
+          text: "Excluir", 
+          onPress: () => deleteItem(key),
+          style: "destructive"
+        }
+      ]
+    );
+  };
+
   return (
     <Card style={styles.container}>
       <Card.Content>
@@ -50,7 +69,7 @@ export default function ListarProgresso({ data, deleteItem, editItem }) {
             <Text style={[styles.buttonText, { color: '#1565C0' }]}>Editar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => deleteItem(data.key)} style={styles.button}>
+          <TouchableOpacity onPress={() => confirmarExclusao(data.key)} style={styles.button}>
             <FontAwesome name="trash-o" color="#A52A2A" size={20} />
             <Text style={[styles.buttonText, { color: '#A52A2A' }]}>Excluir</Text>
           </TouchableOpacity>
@@ -68,6 +87,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 10,
     elevation: 2,
+    maxWidth: '100%', // Garante que o card não extrapole a largura da tela
   },
   title: {
     color: '#333',
@@ -95,7 +115,8 @@ const styles = StyleSheet.create({
   text: {
     color: '#444',
     fontSize: 15,
-    marginLeft: 8
+    marginLeft: 8,
+    flex: 1, // Permite que o texto se ajuste ao espaço disponível
   },
   chipContainer: {
     flexDirection: 'row',
