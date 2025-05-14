@@ -191,33 +191,6 @@ const RegistrarProgresso = () => {
     alert('Registro excluído!');
   }
 
-  function excluirRegistro(key) {
-    // Mostra um alerta de confirmação
-    Alert.alert(
-      "Confirmar exclusão",
-      "Tem certeza que deseja excluir este registro?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel"
-        },
-        { 
-          text: "Excluir", 
-          onPress: () => {
-            // Código original de exclusão
-            firebase.database().ref('Progressos').child(key).remove()
-              .then(() => {
-                const novosProgressos = listaProgressos.filter(item => item.key !== key);
-                setListaProgressos(novosProgressos);
-              });
-            alert('Registro excluído!');
-          },
-          style: "destructive"
-        }
-      ]
-    );
-  }
-
   // Selecionar um jogo da lista
   const selecionarJogo = (jogo) => {
     setNomeJogo(jogo.nome);
@@ -241,6 +214,7 @@ const RegistrarProgresso = () => {
               setMostrarJogos(text.length > 0);
             }}
             style={styles.input}
+            theme={{ colors: { primary: '#0d9a9f' } }}
             left={<TextInput.Icon icon="gamepad-variant" />}
             error={errors.nomeJogo}
           />
@@ -283,6 +257,7 @@ const RegistrarProgresso = () => {
             style={[styles.input, { flex: 2 }]}
             keyboardType="numeric"
             left={<TextInput.Icon icon="clock-outline" />}
+            theme={{ colors: { primary: '#0d9a9f' } }}
             error={errors.tempoJogado}
           />
           
@@ -292,11 +267,11 @@ const RegistrarProgresso = () => {
           >
             <View style={styles.radioGroup}>
               <View style={styles.radioOption}>
-                <RadioButton value="horas" />
+                <RadioButton value="horas" theme={{ colors: { primary: '#0d9a9f' } }}/>
                 <Text>Horas</Text>
               </View>
               <View style={styles.radioOption}>
-                <RadioButton value="minutos" />
+                <RadioButton value="minutos" theme={{ colors: { primary: '#0d9a9f' } }}/>
                 <Text>Minutos</Text>
               </View>
             </View>
@@ -317,12 +292,14 @@ const RegistrarProgresso = () => {
             value={conquistas}
             onChangeText={setConquistas}
             style={[styles.input, { flex: 1 }]}
+            theme={{ colors: { primary: '#0d9a9f' } }}
             left={<TextInput.Icon icon="trophy" />}
           />
           <IconButton
             icon="plus"
             size={24}
             onPress={adicionarConquista}
+            theme={{ colors: { primary: '#0d9a9f' } }}
             style={styles.addButton}
           />
         </View>
@@ -334,6 +311,7 @@ const RegistrarProgresso = () => {
               key={index}
               onClose={() => removerConquista(index)}
               style={styles.chip}
+              theme={{ colors: { primary: '#0d9a9f' } }}
               icon="trophy"
             >
               {conquista}
@@ -350,6 +328,7 @@ const RegistrarProgresso = () => {
           multiline
           numberOfLines={4}
           left={<TextInput.Icon icon="text" />}
+          theme={{ colors: { primary: '#0d9a9f' } }}
         />
         
         {/* Data do Registro (editável pelo usuário) */}
@@ -363,6 +342,7 @@ const RegistrarProgresso = () => {
           placeholder="DD/MM/AAAA"
           style={styles.input}
           left={<TextInput.Icon icon="calendar" />}
+          theme={{ colors: { primary: '#0d9a9f' } }}
           error={errors.dataRegistro}
         />
         {errors.dataRegistro && (
@@ -377,6 +357,7 @@ const RegistrarProgresso = () => {
           onPress={salvarProgresso}
           style={styles.button}
           icon="content-save"
+          textColor="#ffffff"
         >
           Salvar Progresso
         </Button>
